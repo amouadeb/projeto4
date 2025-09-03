@@ -41,7 +41,10 @@ def draw_bar_plot():
     table = df_bar.pivot_table(values="value", index="year", columns="month", aggfunc="mean")
 
     # ordenar meses 1..12 e renomear colunas para nomes abreviados
-    month_names = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
+    month_names = [
+          "January","February","March","April","May","June",
+    "July","August","September","October","November","December"
+]
     table = table.reindex(columns=range(1, 13))
     table.columns = month_names
 
