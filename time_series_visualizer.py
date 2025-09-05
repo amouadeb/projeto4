@@ -1,3 +1,4 @@
+# Chama as bibliotecas
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
@@ -5,6 +6,7 @@ from pandas.plotting import register_matplotlib_converters
 register_matplotlib_converters()
 
 # Import data (Make sure to parse dates. Consider setting index column to 'date'.)
+#Importação dos dados csv
 df = pd.read_csv(
     "fcc-forum-pageviews.csv",
     parse_dates=["date"],
@@ -12,6 +14,7 @@ df = pd.read_csv(
 )
 
 # Clean data
+# Limpeza dos dados
 low = df["value"].quantile(0.025)
 high = df["value"].quantile(0.975)
 df = df[(df["value"] >= low) & (df["value"] <= high)].copy()
@@ -21,12 +24,13 @@ def draw_line_plot():
     # Draw line plot
     data = df.copy()
     fig, ax = plt.subplots(figsize=(15, 5))
-    ax.plot(data.index, data["value"])
+    ax.plot(data.index, data["value"], color="red")
     ax.set_title("Daily freeCodeCamp Forum Page Views 5/2016-12/2019")
     ax.set_xlabel("Date")
     ax.set_ylabel("Page Views")
 
     # Save image and return fig (don't change this part)
+    # chama as fotos
     fig.savefig('line_plot.png')
     return fig
 
@@ -40,16 +44,16 @@ def draw_bar_plot():
     # média diária por mês/ano
     table = df_bar.pivot_table(values="value", index="year", columns="month", aggfunc="mean")
 
-    # ordenar meses 1..12 e renomear colunas para nomes abreviados
-    month_names = [
+    # Chama os meses em ordem
+    months = [
           "January","February","March","April","May","June",
     "July","August","September","October","November","December"
 ]
     table = table.reindex(columns=range(1, 13))
-    table.columns = month_names
+    table.columns = months
 
     # Draw bar plot
-    ax = table.plot(kind="bar", figsize=(10, 8), legend=True)
+    ax = table.plot(kind="bar", figsize=(10, 8), legend=True, colormap="Set3")
     ax.set_xlabel("Years")
     ax.set_ylabel("Average Page Views")
     ax.legend(title="Months")
@@ -68,19 +72,22 @@ def draw_box_plot():
     df_box['month'] = [d.strftime('%b') for d in df_box.date]
 
     # Draw box plots (using Seaborn)
-    # ordenar meses Jan..Dec
-    month_order = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
+    # ordem dos meses
+    month_order = ["Jan","Feb","Mar","Apr","May",
+                   "Jun","Jul","Aug","Sep","Oct",
+                   "Nov","Dec"
+                   ]
 
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 6))
 
-    # boxplot por ano
-    sns.boxplot(data=df_box, x="year", y="value", ax=ax1)
+    # boxplot por ano (ano x valor)
+    sns.boxplot(data=df_box, x="year", y="value", ax=ax1, color="green")
     ax1.set_title("Year-wise Box Plot (Trend)")
     ax1.set_xlabel("Year")
     ax1.set_ylabel("Page Views")
 
-    # boxplot por mês (todas as anos juntos)
-    sns.boxplot(data=df_box, x="month", y="value", order=month_order, ax=ax2)
+    # boxplot por mês (todas os anos juntos)
+    sns.boxplot(data=df_box, x="month", y="value", order=month_order, ax=ax2, color ="pink")
     ax2.set_title("Month-wise Box Plot (Seasonality)")
     ax2.set_xlabel("Month")
     ax2.set_ylabel("Page Views")
